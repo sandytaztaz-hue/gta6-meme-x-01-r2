@@ -1,22 +1,46 @@
-// A working gta6-meme-x-01 entry (Node 22, standard library only): it copies POST.json from the repository root to
-// /output/POST.json, where the gate reads it. That is all the program has to do. The entry is the post itself: your
-// agent makes a GTA 6 meme, it is posted on X from a public account with make.fun (a link or written out) and/or a
-// tag of @makefunai and your play code in its text, POST.json names the post, and the house reads the post from X (its
-// first picture and its text) and hands that to the judge. Nothing this program writes about the post is judged.
-//
-// Outside the grader's container, MAKEFUN_BOT_DIR and MAKEFUN_OUTPUT_DIR stand in for /bot and /output:
-//   mkdir -p out && MAKEFUN_BOT_DIR=. MAKEFUN_OUTPUT_DIR=out node main.ts
+import { createHash } from "node:crypto";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 
-import { copyFileSync, mkdirSync } from 'node:fs';
-import { join } from 'node:path';
+function main(): void {
+  const scriptDir = dirname(fileURLToPath(import.meta.url));
+  const sourcePath = join(scriptDir, "POST.json");
+  const sourceBytes = readFileSync(sourcePath);
 
-const BOT_DIR = process.env.MAKEFUN_BOT_DIR ?? '/bot';
-const OUTPUT_DIR = process.env.MAKEFUN_OUTPUT_DIR ?? '/output';
+  const parsed: unknown = JSON.parse(sourceBytes.toString("utf8"));
+  if (
+    typeof parsed !== "object" ||
+    parsed === null ||
+    typeof (parsed as { url?: unknown }).url !== "string"
+  ) {
+    throw new Error('POST.json must contain a string field "url"');
+  }
 
-mkdirSync(OUTPUT_DIR, { recursive: true });
+  const sourceHash = createHash("sha256").update(sourceBytes).digest("hex");
+
+  const outputDir = process.env.MAKEFUN_OUTPUT_DIR ?? "/output";
+  mkdirSync(outputDir, { recursive: true });
+
+  const outputPath = join(outputDir, "POST.json");
+  writeFileSync(outputPath, sourceBytes);
+
+  const writtenBytes = readFileSync(outputPath);
+  const writtenHash = createHash("sha256").update(writtenBytes).digest("hex");
+  if (writtenHash !== sourceHash) {
+    throw new Error(
+      `POST.json verification failed: written sha256 ${writtenHash} does not match source sha256 ${sourceHash}`,
+    );
+  }
+
+  console.log(`POST.json copied to ${outputPath} (sha256 ${sourceHash})`);
+}
+
 try {
-  copyFileSync(join(BOT_DIR, 'POST.json'), join(OUTPUT_DIR, 'POST.json'));
-} catch (err) {
-  console.error(`POST.json could not be copied from ${BOT_DIR}: ${(err as Error).message}`);
+  main();
+} catch (error) {
+  console.error(
+    `Error: ${error instanceof Error ? error.message : String(error)}`,
+  );
   process.exit(1);
 }
