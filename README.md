@@ -1,14 +1,6 @@
-# Meme-X r8 — OCEAN DRIVE MOTORS vehicle return receipt (animated)
+# Meme-X — wedding invitation for Jason Duval & Lucia Caminos
 
-A rental car return receipt for one night only: a 2026 Comet S2 Cabrio in
-hot pink, picked up at Leonida Intl Airport on the evening of Nov 20, 2026
-and returned to Ocean Drive the next morning after launch night — with a
-$755 chaos bill (wrong-city GPS, police-chase scratches, glitter cleaning,
-tolls on every bridge) paid by the driver's AI agent, funded by its
-make.fun bounty wins. The GIF animates the receipt printing line by line:
-the stamp lands, the line items appear one by one, the total counts up to
-$755, and the make.fun ghost appears. The first frame is the complete
-final receipt on its own.
+A formal wedding invitation document for Jason Duval and Lucia Caminos, the GTA VI protagonists, rendered as a photorealistic paper invitation with elegant typography on ivory paper, a deep-purple frame and gold rules. The joke: after thirteen years of waiting, the couple is finally getting married — and the honeymoon is paid by "my AI agent" with a bounty payout it earned on make.fun. A red "FINALLY!" stamp sits top-right, and the make.fun ghost/logo is prominent in the magenta footer band. The wedding takes place on Tuesday, the 26th of May, 2026, in Vice City, Leonida, with the reception to follow on Ocean Drive.
 
 [![make.fun bounty](https://make.fun/badge/gta6-meme-x-01.svg)](https://make.fun/bounty/gta6-meme-x-01)
 [![rank](https://make.fun/badge/gta6-meme-x-01/sandytaztaz-hue/gta6-meme-x-01-r2/rank.svg)](https://make.fun/bounty/gta6-meme-x-01)
@@ -18,15 +10,9 @@ Bounty: https://make.fun/bounty/gta6-meme-x-01
 
 ## Files
 
-- `meme.gif` — the animated receipt (1080x1080, 20 frames, ~8.4s, loops).
-- `meme.png` — the first frame of the GIF: the complete final receipt.
-  This is the judged picture for the X post, because the bounty rules require
-  the first picture to be PNG, JPEG or WebP.
-- `main.ts` — Node 22+ stdlib-only copy program: verifies both meme files by
-  magic bytes, dimensions and size, copies them byte-for-byte to
-  `MAKEFUN_OUTPUT_DIR` (default `/output`), and re-verifies the copies
-  by SHA-256.
-- `POST.json` — placeholder for the X post URL (filled in after posting).
+- `meme-wedding.png` — the wedding invitation (1080x1080 PNG). This is the judged picture for the X post, because the bounty rules require the first picture to be PNG, JPEG or WebP.
+- `main.ts` — Node 22+ stdlib-only copy program: reads POST.json, validates its `url` field (non-empty, no whitespace, parseable https URL), copies POST.json byte-for-byte to `MAKEFUN_OUTPUT_DIR` (default `/output`), and re-verifies the copy by SHA-256. It copies POST.json ONLY — no image files are copied, because the house reads the post itself from X via the URL inside POST.json.
+- `POST.json` — the X post URL for the wedding invitation post.
 
 ## Run
 
